@@ -5,33 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StemSchool"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="400" Width="710" ResizeMode="CanMinimize">
     <Grid>
-         <!-- Текстовые поля -->
+        <!-- Текстовые поля -->
         <TextBox Name="ProxyTextBox" Text="10.0.50.52" 
                  HorizontalAlignment="Left" VerticalAlignment="Top" 
-                 Margin="20,20,0,0" Width="200" />
-        
+                 Margin="10,9,0,0" Width="335" Height="60" FontSize="42"/>
+
         <TextBox Name="PortTextBox" Text="3128" 
                  HorizontalAlignment="Left" VerticalAlignment="Top" 
-                 Margin="20,60,0,0" Width="200"/>
-        
+                 Margin="10,74,0,0" Width="335" Height="60" FontSize="42"/>
+
         <!-- Кнопки -->
-        <Button Name="ApplyProxyBtn" Content="Применить Прокси" 
+        <Button Name="ApplyProxyBtn" Content="Применить прокси" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="23,100,0,0" Width="100" Click="SetProxy"/>
-        
-        <Button Name="ApplyCertBtn" Content="Установить сертификат" 
+                Margin="10,138,0,0" Width="335" Height="68" FontSize="32" Click="SetProxy"/>
+
+        <Button Name="InstCertBtn" Content="Установить cert.msi" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="140,100,0,0" Width="100" Click="Button2_Click"/>
-        
-        <Button Name="GitHubBtn" Content="Мой GitHub" 
+                Margin="10,211,0,0" Width="335" Height="68" FontSize="32" Click="Cert_Click"/>
+
+        <Button Name="AllBtn" Content="Настроить все" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="20,140,0,0" Width="100" Click="Button3_Click"/>
-        
+                Margin="355,138,0,0" Width="335" Click="All_Click" Height="141"  FontSize="32"/>
+
+        <Button Name="GitHubBtn" Content="GitHub" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Margin="10,284,0,0" Width="335" Click="GitHub_Click" Height="68" FontSize="32"/>
+
         <Button Name="ExitBtn" Content="Закрыть программу" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="140,140,0,0" Width="100" Click="Button4_Click"/>
+                Margin="355,284,0,0" Width="335" Click="Exit_Click" Height="68" FontSize="32"/>
 
     </Grid>
 </Window>

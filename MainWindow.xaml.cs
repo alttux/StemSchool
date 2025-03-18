@@ -1,14 +1,9 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System;
+using System.IO;
 
 namespace StemSchool;
 
@@ -17,7 +12,10 @@ namespace StemSchool;
 /// </summary>
 public partial class MainWindow : Window
 {
-    string proxyAddr = ProxyTextBox.Text;
+    private string globalProxyAddr;
+    private int globalProxyPort;
+    const string msiName = "cert_install_v2.msi";
+
     public MainWindow()
     {
         InitializeComponent();
@@ -26,23 +24,35 @@ public partial class MainWindow : Window
     // Заглушки для кнопок
     private void SetProxy(object sender, RoutedEventArgs e)
     {
+        globalProxyAddr = ProxyTextBox.Text;
+        globalProxyPort = Convert.ToInt32(PortTextBox.Text);
         ConfProxy.SetProxy("10.0.50.52", 3128, 1);
-        MessageBox.Show("Нажата Кнопка 1");
+        MessageBox.Show("Прокси настроен");
     }
 
-    private void Button2_Click(object sender, RoutedEventArgs e)
+    private void Cert_Click(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show("Нажата Кнопка 2");
+        ConfProxy.RunMsiInstaller(msiName);
+    }
+    private void All_Click(object sender, RoutedEventArgs e)
+    {
+        globalProxyAddr = ProxyTextBox.Text;
+        globalProxyPort = Convert.ToInt32(PortTextBox.Text);
+        ConfProxy.SetProxy("10.0.50.52", 3128, 1);
+        ConfProxy.RunMsiInstaller(msiName);
+        MessageBox.Show("ESPD настроен");
+    }
+    private void GitHub_Click(object sender, RoutedEventArgs e)
+    {
+        Process.Start(new ProcessStartInfo("https://github.com/CodeCraftsman89")
+        {
+            UseShellExecute = true
+        });
     }
 
-    private void Button3_Click(object sender, RoutedEventArgs e)
+    private void Exit_Click(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show("Нажата Кнопка 3");
-    }
-
-    private void Button4_Click(object sender, RoutedEventArgs e)
-    {
-        MessageBox.Show("Нажата Кнопка 4");
+        Application.Current.Shutdown();
     }
 
 
@@ -63,11 +73,32 @@ public class ConfProxy
                     key.SetValue("ProxyServer", $"{proxyAddress}:{port}");
                 }
             }
-            Console.WriteLine("Proxy settings updated successfully.");
+            MessageBox.Show("Прокси настроен");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error updating proxy settings: " + ex.Message);
+             MessageBox.Show("Ошибка настройки прокси: " + ex.Message);
+        }
+    }
+
+    public static void RunMsiInstaller(string msiName)
+    {
+        string msiPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, msiName);
+
+        if (File.Exists(msiPath))
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "msiexec.exe",
+                Arguments = $"/i \"{msiPath}\" /qb", // /qn - тихая установка без окон
+                UseShellExecute = false
+            });
+
+            Console.WriteLine($"Запущена установка: {msiPath}");
+        }
+        else
+        {
+            Console.WriteLine($"Файл не найден: {msiPath}");
         }
     }
 }
