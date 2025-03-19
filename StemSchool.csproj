@@ -6,6 +6,23 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <PackageIcon>image_2025-03-18_07-00-51.png</PackageIcon>
+    <ApplicationIcon>image_2025-03-18_07-00-51.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="image_2025-03-18_07-00-51.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="image_2025-03-18_07-00-51.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="image_2025-03-18_07-00-51.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
