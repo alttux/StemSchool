@@ -36,11 +36,11 @@ public partial class MainWindow : Window
     }
     private void All_Click(object sender, RoutedEventArgs e)
     {
+        ConfProxy.RunMsiInstaller(msiName);
+        MessageBox.Show("ESPD настроен");
         globalProxyAddr = ProxyTextBox.Text;
         globalProxyPort = Convert.ToInt32(PortTextBox.Text);
         ConfProxy.SetProxy("10.0.50.52", 3128, 1);
-        ConfProxy.RunMsiInstaller(msiName);
-        MessageBox.Show("ESPD настроен");
     }
     private void GitHub_Click(object sender, RoutedEventArgs e)
     {
@@ -100,5 +100,51 @@ public class ConfProxy
         {
             Console.WriteLine($"Файл не найден: {msiPath}");
         }
+    }
+
+    // 🔹 Отключение анимаций (лучшее быстродействие)
+    public static void DisableAnimations()
+    {
+        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
+        if (key != null)
+        {
+            key.SetValue("UserPreferencesMask", new byte[] { 144, 18, 3, 128, 12, 0, 0, 0 }, RegistryValueKind.Binary);
+            key.Close();
+        }
+
+        key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects", true);
+        if (key != null)
+        {
+            key.SetValue("VisualFXSetting", 2, RegistryValueKind.DWord); // 2 = "Лучшее быстродействие"
+            key.Close();
+        }
+
+        ApplyChanges();
+    }
+
+    // 🔹 Включение анимаций (стандартные настройки Windows)
+    public static void EnableAnimations()
+    {
+        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
+        if (key != null)
+        {
+            key.SetValue("UserPreferencesMask", new byte[] { 144, 38, 3, 128, 12, 0, 0, 0 }, RegistryValueKind.Binary);
+            key.Close();
+        }
+
+        key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects", true);
+        if (key != null)
+        {
+            key.SetValue("VisualFXSetting", 1, RegistryValueKind.DWord); // 1 = "Обычный режим"
+            key.Close();
+        }
+
+        ApplyChanges();
+    }
+
+    // 🔹 Применение настроек без перезагрузки
+    static void ApplyChanges()
+    {
+        Process.Start("RUNDLL32.EXE", "USER32.DLL,UpdatePerUserSystemParameters ,1 ,True");
     }
 }

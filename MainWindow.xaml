@@ -24,6 +24,19 @@
             </TabItem>
             <TabItem Header="Оптимизация">
                 <StackPanel Margin="10,10,320,10">
+                    <Label x:Name="AniLbl" Content="Анимации и тени" 
+                           FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Выключить анимации" />
+                        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
+        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                        <Button Grid.Column="2" Content="Включить анимации" />
+                    </Grid>
 
 
                 </StackPanel>
