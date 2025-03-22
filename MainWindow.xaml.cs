@@ -115,6 +115,7 @@ public class Tweaks
         }
     }
 
+    // Хз как работает. Онимации
     const uint SPI_SETCLIENTAREAANIMATION = 0x1043;
     const uint SPIF_UPDATEINIFILE = 0x01;
     const uint SPIF_SENDCHANGE = 0x02;
