@@ -26,19 +26,19 @@
                 <StackPanel Margin="10,10,320,10">
                     <Label x:Name="AniLbl" Content="Анимации и тени" 
                            FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-                    <Grid>
+                    <Grid Margin="0 0 10 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="Выключить анимации" />
+                        <Button Grid.Column="0" Content="Выключить анимации" 
+                                FontSize="16" Click="OffAniClick"/>
                         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
-        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
-                        <Button Grid.Column="2" Content="Включить анимации" />
+                                    HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                        <Button Grid.Column="2" Content="Включить анимации" 
+                                FontSize="16" Click="OnAniClick"/>
                     </Grid>
-
-
                 </StackPanel>
             </TabItem>
         </TabControl>

@@ -26,21 +26,21 @@ public partial class MainWindow : Window
     {
         globalProxyAddr = ProxyTextBox.Text;
         globalProxyPort = Convert.ToInt32(PortTextBox.Text);
-        ConfProxy.SetProxy("10.0.50.52", 3128, 1);
+        Tweaks.SetProxy(globalProxyAddr, globalProxyPort, 1);
         MessageBox.Show("Прокси настроен");
     }
 
     private void Cert_Click(object sender, RoutedEventArgs e)
     {
-        ConfProxy.RunMsiInstaller(msiName);
+        Tweaks.RunMsiInstaller(msiName);
     }
     private void All_Click(object sender, RoutedEventArgs e)
     {
-        ConfProxy.RunMsiInstaller(msiName);
+        Tweaks.RunMsiInstaller(msiName);
         MessageBox.Show("ESPD настроен");
         globalProxyAddr = ProxyTextBox.Text;
         globalProxyPort = Convert.ToInt32(PortTextBox.Text);
-        ConfProxy.SetProxy("10.0.50.52", 3128, 1);
+        Tweaks.SetProxy(globalProxyAddr, globalProxyPort, 1);
     }
     private void GitHub_Click(object sender, RoutedEventArgs e)
     {
@@ -55,11 +55,18 @@ public partial class MainWindow : Window
         Application.Current.Shutdown();
     }
 
+    private void OnAniClick(object sender, RoutedEventArgs e)
+    {
+    }
 
+    private void OffAniClick(object sender, RoutedEventArgs e)
+    {
+    }
 }
 
-public class ConfProxy
+public class Tweaks
 {
+    // Настройка прокси сервера
     public static void SetProxy(string proxyAddress, int port, int proxyEnable)
     {
         const string registryKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings";
@@ -81,6 +88,8 @@ public class ConfProxy
         }
     }
 
+
+    // Запуск сертефиката
     public static void RunMsiInstaller(string msiName)
     {
         string msiPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, msiName);
@@ -94,57 +103,12 @@ public class ConfProxy
                 UseShellExecute = false
             });
 
-            Console.WriteLine($"Запущена установка: {msiPath}");
+            MessageBox.Show($"Запущена установка: {msiPath}");
         }
         else
         {
-            Console.WriteLine($"Файл не найден: {msiPath}");
+            MessageBox.Show($"Файл не найден: {msiPath}");
         }
     }
 
-    // 🔹 Отключение анимаций (лучшее быстродействие)
-    public static void DisableAnimations()
-    {
-        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
-        if (key != null)
-        {
-            key.SetValue("UserPreferencesMask", new byte[] { 144, 18, 3, 128, 12, 0, 0, 0 }, RegistryValueKind.Binary);
-            key.Close();
-        }
-
-        key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects", true);
-        if (key != null)
-        {
-            key.SetValue("VisualFXSetting", 2, RegistryValueKind.DWord); // 2 = "Лучшее быстродействие"
-            key.Close();
-        }
-
-        ApplyChanges();
-    }
-
-    // 🔹 Включение анимаций (стандартные настройки Windows)
-    public static void EnableAnimations()
-    {
-        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
-        if (key != null)
-        {
-            key.SetValue("UserPreferencesMask", new byte[] { 144, 38, 3, 128, 12, 0, 0, 0 }, RegistryValueKind.Binary);
-            key.Close();
-        }
-
-        key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects", true);
-        if (key != null)
-        {
-            key.SetValue("VisualFXSetting", 1, RegistryValueKind.DWord); // 1 = "Обычный режим"
-            key.Close();
-        }
-
-        ApplyChanges();
-    }
-
-    // 🔹 Применение настроек без перезагрузки
-    static void ApplyChanges()
-    {
-        Process.Start("RUNDLL32.EXE", "USER32.DLL,UpdatePerUserSystemParameters ,1 ,True");
-    }
 }
