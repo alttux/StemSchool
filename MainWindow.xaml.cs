@@ -4,6 +4,7 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace StemSchool;
 
@@ -61,6 +62,9 @@ public partial class MainWindow : Window
 
     private void OffAniClick(object sender, RoutedEventArgs e)
     {
+        Tweaks.DisableClientAreaAnimation();
+        // Остальной код приложения
+        MessageBox.Show("Системные анимации отключены.");
     }
 }
 
@@ -110,5 +114,22 @@ public class Tweaks
             MessageBox.Show($"Файл не найден: {msiPath}");
         }
     }
+
+    const uint SPI_SETCLIENTAREAANIMATION = 0x1043;
+    const uint SPIF_UPDATEINIFILE = 0x01;
+    const uint SPIF_SENDCHANGE = 0x02;
+
+    [DllImport("user32.dll", SetLastError = true)]
+    static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
+
+    public static void DisableClientAreaAnimation()
+    {
+        // Передаем uiParam = 0, чтобы отключить анимацию
+        if (!SystemParametersInfo(SPI_SETCLIENTAREAANIMATION, 0, IntPtr.Zero, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE))
+        {
+            Console.WriteLine("Ошибка: " + Marshal.GetLastWin32Error());
+        }
+    }
+
 
 }
