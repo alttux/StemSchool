@@ -58,11 +58,13 @@ public partial class MainWindow : Window
 
     private void OnAniClick(object sender, RoutedEventArgs e)
     {
+        Tweaks.EnableAllAnimations();
+        MessageBox.Show("Системные анимции включены");
     }
 
     private void OffAniClick(object sender, RoutedEventArgs e)
     {
-        Tweaks.DisableClientAreaAnimation();
+        Tweaks.DisableAllAnimations();
         // Остальной код приложения
         MessageBox.Show("Системные анимации отключены.");
     }
@@ -117,20 +119,94 @@ public class Tweaks
 
     // Хз как работает. Онимации
     const uint SPI_SETCLIENTAREAANIMATION = 0x1043;
+    const uint SPI_SETANIMATION = 0x0049;
     const uint SPIF_UPDATEINIFILE = 0x01;
     const uint SPIF_SENDCHANGE = 0x02;
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct ANIMATIONINFO
+    {
+        public uint cbSize;
+        public int iMinAnimate;
+    }
 
     [DllImport("user32.dll", SetLastError = true)]
     static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
 
-    public static void DisableClientAreaAnimation()
+    public static void EnableAllAnimations()
     {
-        // Передаем uiParam = 0, чтобы отключить анимацию
-        if (!SystemParametersInfo(SPI_SETCLIENTAREAANIMATION, 0, IntPtr.Zero, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE))
+        try
         {
-            Console.WriteLine("Ошибка: " + Marshal.GetLastWin32Error());
+            // 1. Включаем анимацию клиентской области окон
+            if (!SystemParametersInfo(SPI_SETCLIENTAREAANIMATION, 1, IntPtr.Zero, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE))
+            {
+                Console.WriteLine("⚠ Ошибка включения анимации клиентской области: " + Marshal.GetLastWin32Error());
+            }
+
+            // 2. Включаем анимации окон (разворачивание/сворачивание)
+            ANIMATIONINFO animInfo = new ANIMATIONINFO { cbSize = (uint)Marshal.SizeOf(typeof(ANIMATIONINFO)), iMinAnimate = 1 };
+            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ANIMATIONINFO)));
+            Marshal.StructureToPtr(animInfo, ptr, false);
+            if (!SystemParametersInfo(SPI_SETANIMATION, (uint)Marshal.SizeOf(typeof(ANIMATIONINFO)), ptr, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE))
+            {
+                Console.WriteLine("⚠ Ошибка включения анимации окон: " + Marshal.GetLastWin32Error());
+            }
+            Marshal.FreeHGlobal(ptr);
+
+            // 3. Включаем анимации через реестр
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop\WindowMetrics", true);
+            if (key != null)
+            {
+                key.SetValue("MinAnimate", "1", RegistryValueKind.String);
+                key.Close();
+            }
+
+            // 4. Применяем изменения без перезагрузки
+            ApplyChanges();
+
+            Console.WriteLine("✅ Все анимации включены!");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Ошибка: " + ex.Message);
         }
     }
 
+    public static void DisableAllAnimations()
+    {
+        try
+        {
+            // 1. Отключаем анимацию клиентской области окон
+            SystemParametersInfo(SPI_SETCLIENTAREAANIMATION, 0, IntPtr.Zero, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
+
+            // 2. Отключаем анимации окон (разворачивание/сворачивание)
+            ANIMATIONINFO animInfo = new ANIMATIONINFO { cbSize = (uint)Marshal.SizeOf(typeof(ANIMATIONINFO)), iMinAnimate = 0 };
+            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ANIMATIONINFO)));
+            Marshal.StructureToPtr(animInfo, ptr, false);
+            SystemParametersInfo(SPI_SETANIMATION, (uint)Marshal.SizeOf(typeof(ANIMATIONINFO)), ptr, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
+            Marshal.FreeHGlobal(ptr);
+
+            // 3. Отключаем анимации через реестр
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop\WindowMetrics", true);
+            if (key != null)
+            {
+                key.SetValue("MinAnimate", "0", RegistryValueKind.String);
+                key.Close();
+            }
+
+            // 4. Применяем изменения без перезагрузки
+            ApplyChanges();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Ошибка: " + ex.Message);
+        }
+    }
+
+    // 🔹 Применение настроек без перезагрузки
+    private static void ApplyChanges()
+    {
+        Process.Start("RUNDLL32.EXE", "USER32.DLL,UpdatePerUserSystemParameters ,1 ,True");
+    }
 
 }
