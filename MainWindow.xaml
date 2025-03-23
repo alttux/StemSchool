@@ -25,7 +25,7 @@
             <TabItem Header="Оптимизация">
                 <StackPanel Margin="10,10,320,10">
                     <Label x:Name="AniLbl" Content="Анимации и тени" 
-                           FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+               FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                     <Grid Margin="0 0 10 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -33,14 +33,14 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Content="Выключить анимации" 
-                                FontSize="16" Click="OffAniClick"/>
+                    FontSize="16" Click="OffAniClick"/>
                         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
-                                    HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
                         <Button Grid.Column="2" Content="Включить анимации" 
-                                FontSize="16" Click="OnAniClick"/>
+                    FontSize="16" Click="OnAniClick"/>
                     </Grid>
                     <Label x:Name="TransLbl" Content="Эффекты прозрачности" 
-                           FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+               FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                     <Grid Margin="0 0 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -48,11 +48,30 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Content="Выключить прозрачность" 
-                                FontSize="16" Click="OffTransClick"/>
+                    FontSize="16" Click="OffTransClick"/>
                         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
-                                    HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
                         <Button Grid.Column="2" Content="Включить прозрачность" 
-                                FontSize="16" Click="OnTransClick"/>
+                    FontSize="16" Click="OnTransClick"/>
+                    </Grid>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Запреты">
+                <StackPanel Margin="10,10,320,10">
+                    <Label x:Name="WalpaperLbl" Content="Обои" 
+               FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Grid Margin="0 0 10 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Запретить изменения" 
+                    FontSize="16" Click="OnWalpaperClick"/>
+                        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
+                        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                        <Button Grid.Column="2" Content="Разрешить изменения" 
+                    FontSize="16" Click="OffWalpaperClick"/>
                     </Grid>
                 </StackPanel>
             </TabItem>

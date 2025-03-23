@@ -80,6 +80,18 @@ public partial class MainWindow : Window
         // Остальной код приложения
         MessageBox.Show("Эффекты прозрачности отключены.");
     }
+    private void OnWalpaperClick (object sender, RoutedEventArgs e)
+    {
+        Tweaks.EnableWallpaperChange();
+        // Остальной код приложения
+        MessageBox.Show("Включить измение обоев.");
+    }
+    private void OffWalpaperClick(object sender, RoutedEventArgs e)
+    {
+        Tweaks.DisableWallpaperChange();
+        // Остальной код приложения
+        MessageBox.Show("Отключить изменение обоев.");
+    }
 }
 
 public class Tweaks
@@ -270,5 +282,20 @@ public class Tweaks
             Console.WriteLine("❌ Ошибка: " + ex.Message);
         }
     }
+
+    /// <summary>
+    /// Запрещает пользователю менять обои на рабочем столе.
+    /// </summary>
+    public static void DisableWallpaperChange()
+    {
+    }
+
+    /// <summary>
+    /// Разрешает пользователю менять обои.
+    /// </summary>
+    public static void EnableWallpaperChange()
+    {
+    }
+
 
 }
