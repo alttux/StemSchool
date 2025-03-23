@@ -68,6 +68,18 @@ public partial class MainWindow : Window
         // Остальной код приложения
         MessageBox.Show("Системные анимации отключены.");
     }
+    private void OnTransClick(object sender, RoutedEventArgs e)
+    {
+        Tweaks.EnableTransparencyEffects();
+        // Остальной код приложения
+        MessageBox.Show("Эффекты прозрачности включены.");
+    }
+    private void OffTransClick (object sender, RoutedEventArgs e)
+    {
+        Tweaks.DisableTransparencyEffects();
+        // Остальной код приложения
+        MessageBox.Show("Эффекты прозрачности отключены.");
+    }
 }
 
 public class Tweaks
@@ -207,6 +219,56 @@ public class Tweaks
     private static void ApplyChanges()
     {
         Process.Start("RUNDLL32.EXE", "USER32.DLL,UpdatePerUserSystemParameters ,1 ,True");
+    }
+
+    public static void DisableTransparencyEffects()
+    {
+        try
+        {
+            // Открываем ключ реестра, который отвечает за прозрачность
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", true);
+            if (key != null)
+            {
+                key.SetValue("EnableTransparency", 0, RegistryValueKind.DWord); // 0 = Отключить прозрачность
+                key.Close();
+            }
+
+            // Применяем изменения без перезагрузки
+            ApplyChangesTrans();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Ошибка: " + ex.Message);
+        }
+    }
+
+    // 🔹 Применение настроек без перезагрузки
+    private static void ApplyChangesTrans()
+    {
+        Process.Start("RUNDLL32.EXE", "USER32.DLL,UpdatePerUserSystemParameters ,1 ,True");
+    }
+
+
+    // ✅ Метод для включения прозрачности обратно
+    public static void EnableTransparencyEffects()
+    {
+        try
+        {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", true);
+            if (key != null)
+            {
+                key.SetValue("EnableTransparency", 1, RegistryValueKind.DWord); // 1 = Включить прозрачность
+                key.Close();
+            }
+
+            ApplyChangesTrans();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Ошибка: " + ex.Message);
+        }
     }
 
 }
