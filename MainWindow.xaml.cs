@@ -82,13 +82,13 @@ public partial class MainWindow : Window
     }
     private void OnWalpaperClick (object sender, RoutedEventArgs e)
     {
-        Tweaks.EnableWallpaperChange();
+        Tweaks.DisableWallpaperChanging(false);
         // Остальной код приложения
         MessageBox.Show("Включить измение обоев.");
     }
     private void OffWalpaperClick(object sender, RoutedEventArgs e)
     {
-        Tweaks.DisableWallpaperChange();
+        Tweaks.DisableWallpaperChanging(true);
         // Остальной код приложения
         MessageBox.Show("Отключить изменение обоев.");
     }
@@ -283,19 +283,28 @@ public class Tweaks
         }
     }
 
-    /// <summary>
-    /// Запрещает пользователю менять обои на рабочем столе.
-    /// </summary>
-    public static void DisableWallpaperChange()
+    public static void DisableWallpaperChanging(bool disable)
     {
+        try
+        {
+            // Путь к ключу реестра, который управляет сменой обоев
+            string registryPath = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\ActiveDesktop";
+            string valueName = "NoChangingWallpaper";
+
+            // Устанавливаем значение: 1 - запретить смену, 0 - разрешить
+            int value = disable ? 1 : 0;
+
+            Registry.SetValue(registryPath, valueName, value, RegistryValueKind.DWord);
+
+            // Также можно установить политику в другом месте реестра (для некоторых версий Windows)
+            registryPath = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System";
+            Registry.SetValue(registryPath, valueName, value, RegistryValueKind.DWord);
+
+            Console.WriteLine(disable ? "Смена обоев запрещена." : "Смена обоев разрешена.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Ошибка при изменении настроек: " + ex.Message);
+        }
     }
-
-    /// <summary>
-    /// Разрешает пользователю менять обои.
-    /// </summary>
-    public static void EnableWallpaperChange()
-    {
-    }
-
-
 }

@@ -67,11 +67,11 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Content="Запретить изменения" 
-                    FontSize="16" Click="OnWalpaperClick"/>
+                    FontSize="16" Click="OffWalpaperClick"/>
                         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
                         HorizontalAlignment="Center" VerticalAlignment="Stretch" />
                         <Button Grid.Column="2" Content="Разрешить изменения" 
-                    FontSize="16" Click="OffWalpaperClick"/>
+                    FontSize="16" Click="OnWalpaperClick"/>
                     </Grid>
                 </StackPanel>
             </TabItem>
