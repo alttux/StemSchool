@@ -8,10 +8,15 @@
     <UseWPF>true</UseWPF>
     <PackageIcon>image_2025-03-18_07-00-51.png</PackageIcon>
     <ApplicationIcon>image_2025-03-18_07-00-51.ico</ApplicationIcon>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="image_2025-03-18_07-00-51.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ilmerge" Version="3.0.40" />
   </ItemGroup>
 
   <ItemGroup>
