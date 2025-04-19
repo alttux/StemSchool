@@ -73,23 +73,7 @@
                         <Button Grid.Column="2" Content="Разрешить изменения" 
                     FontSize="16" Click="OnWalpaperClick"/>
                     </Grid>
-                    <Label x:Name="CursorLbl" Content="Курсор" 
-                    FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-                    <Grid Margin="0 0 10 0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="Запретить изменения" 
-                         FontSize="16" Click="OffWalpaperClick"/>
-                        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
-                         HorizontalAlignment="Center" VerticalAlignment="Stretch" />
-                        <Button Grid.Column="2" Content="Разрешить изменения" 
-                         FontSize="16" Click="OnWalpaperClick"/>
-                    </Grid>
                 </StackPanel>
-                
             </TabItem>
         </TabControl>
         <Button Name="AllBtn" Content="Настроить все" 
