@@ -45,6 +45,9 @@ namespace StemSchool
             globalProxyAddr = ProxyTextBox.Text;
             globalProxyPort = Convert.ToInt32(PortTextBox.Text);
             Tweaks.SetProxy(globalProxyAddr, globalProxyPort, 1);
+            Tweaks.DisableTransparencyEffects();
+            Tweaks.DisableAllAnimations();
+            Tweaks.DisableWallpaperChanging(true);
         }
         private void GitHub_Click(object sender, RoutedEventArgs e)
         {
