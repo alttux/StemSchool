@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StemSchool"
         mc:Ignorable="d"
-        Title="StemSchool Tweaker" Height="400" Width="695" ResizeMode="CanMinimize" Icon="/image_2025-03-18_07-00-51.png">
+        Title="StemSchool Tweaker" Height="400" Width="740" ResizeMode="CanMinimize" Icon="/image_2025-03-18_07-00-51.png">
     <Grid>
         <TabControl>
             <TabItem Header="Сеть">
-                <StackPanel Margin="10,10,320,10">
+                <StackPanel Margin="10,0,370,0">
                     <!-- Текстовые поля -->
                     <TextBox x:Name="ProxyTextBox" Text="10.0.50.52" 
                              Width="336" Height="60" FontSize="42" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,0"/>
@@ -52,7 +52,7 @@
                         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
                         HorizontalAlignment="Center" VerticalAlignment="Stretch" />
                         <Button Grid.Column="2" Content="Включить прозрачность" 
-                    FontSize="16" Click="OnTransClick"/>
+                    FontSize="16" Click="OnTransClick" Margin="0,0,10,0"/>
                     </Grid>
                 </StackPanel>
             </TabItem>
@@ -73,20 +73,36 @@
                         <Button Grid.Column="2" Content="Разрешить изменения" 
                     FontSize="16" Click="OnWalpaperClick"/>
                     </Grid>
+                    <Label x:Name="CursorLbl" Content="Курсор" 
+                    FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Grid Margin="0 0 10 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Запретить изменения" 
+                         FontSize="16" Click="OffWalpaperClick"/>
+                        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
+                         HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                        <Button Grid.Column="2" Content="Разрешить изменения" 
+                         FontSize="16" Click="OnWalpaperClick"/>
+                    </Grid>
                 </StackPanel>
+                
             </TabItem>
         </TabControl>
         <Button Name="AllBtn" Content="Настроить все" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="355,50,0,0" Width="310" Click="All_Click" Height="135"  FontSize="32"/>
+                Margin="394,32,0,0" Width="310" Click="All_Click" Height="135"  FontSize="32"/>
 
         <Button Name="GitHubBtn" Content="GitHub" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="355,200,0,0" Width="310" Click="GitHub_Click" Height="68" FontSize="32"/>
+                Margin="394,172,0,0" Width="310" Click="GitHub_Click" Height="68" FontSize="32"/>
 
         <Button Name="ExitBtn" Content="Закрыть программу" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="355,283,0,0" Width="310" Click="Exit_Click" Height="68" FontSize="32"/>
+                Margin="394,245,0,0" Width="310" Click="Exit_Click" Height="68" FontSize="32"/>
 
     </Grid>
 </Window>
