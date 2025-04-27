@@ -77,28 +77,37 @@ namespace StemSchool
         private void OnTransClick(object sender, RoutedEventArgs e)
         {
             Tweaks.EnableTransparencyEffects();
-            // Остальной код приложения
             MessageBox.Show(Globals.Message);
         }
         private void OffTransClick(object sender, RoutedEventArgs e)
         {
             Tweaks.DisableTransparencyEffects();
-            // Остальной код приложения
             MessageBox.Show(Globals.Message);
         }
         private void OnWalpaperClick(object sender, RoutedEventArgs e)
         {
             Tweaks.DisableWallpaperChanging(false);
-            // Остальной код приложения
             MessageBox.Show(Globals.Message);
         }
         private void OffWalpaperClick(object sender, RoutedEventArgs e)
         {
             Tweaks.DisableWallpaperChanging(true);
-            // Остальной код приложения
             MessageBox.Show(Globals.Message);
         }
 
+        private void KMSServClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /skms kms.digiboy.ir\""); // 1. Activate KMS Server
+        }
+        private void ProKeyClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ipk W269N-WFGWX-YVC9B-4J6C9-T83GX\""); // 2. Set Activation key
+        }
+
+        private void ActivateClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ato\""); // 3. Apply activation
+        }
 
         public static class Globals
         {
@@ -129,7 +138,7 @@ namespace StemSchool
                 }
             }
 
-            // Запуск сертефиката
+            // Запуск сертификата
             public static void RunMsiInstaller(string msiName)
             {
                 string msiPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, msiName);

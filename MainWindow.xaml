@@ -33,14 +33,14 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Content="Выключить анимации" 
-                    FontSize="16" Click="OffAniClick"/>
+                                FontSize="16" Click="OffAniClick"/>
                         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
-                        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                                HorizontalAlignment="Center" VerticalAlignment="Stretch" />
                         <Button Grid.Column="2" Content="Включить анимации" 
-                    FontSize="16" Click="OnAniClick"/>
+                                FontSize="16" Click="OnAniClick"/>
                     </Grid>
                     <Label x:Name="TransLbl" Content="Эффекты прозрачности" 
-               FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                           FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                     <Grid Margin="0 0 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -48,18 +48,18 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Content="Выключить прозрачность" 
-                    FontSize="16" Click="OffTransClick"/>
+                                FontSize="16" Click="OffTransClick"/>
                         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
-                        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                                HorizontalAlignment="Center" VerticalAlignment="Stretch" />
                         <Button Grid.Column="2" Content="Включить прозрачность" 
-                    FontSize="16" Click="OnTransClick" Margin="0,0,10,0"/>
+                                FontSize="16" Click="OnTransClick" Margin="0,0,10,0"/>
                     </Grid>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Запреты">
                 <StackPanel Margin="10,10,320,10">
                     <Label x:Name="WalpaperLbl" Content="Обои" 
-               FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                           FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                     <Grid Margin="0 0 10 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -67,23 +67,38 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0" Content="Запретить изменения" 
-                    FontSize="16" Click="OffWalpaperClick"/>
+                                FontSize="16" Click="OffWalpaperClick"/>
                         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
-                        HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                                HorizontalAlignment="Center" VerticalAlignment="Stretch" />
                         <Button Grid.Column="2" Content="Разрешить изменения" 
-                    FontSize="16" Click="OnWalpaperClick"/>
+                                FontSize="16" Click="OnWalpaperClick"/>
                     </Grid>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Активация">
+                <StackPanel Margin="10,10,320,10">
+                    <Label x:Name="ActivateLbl" Content="Активация Windows (KMS)" 
+                           FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Button Grid.Column="0" Content="Активировать KMS Сервер" 
+                            FontSize="16" Click="KMSServClick" Margin="0 0 0 0" Width="340"/>
+                    <Button Content="Применить ключ (Pro Only)" 
+                            FontSize="16" Click="ProKeyClick" Margin="0 10 0 0" Width="340"/>
+                    <Button Grid.Column="0" Content="Применить" 
+                            FontSize="16" Click="ActivateClick" Margin="0 10 0 0"  Width="340"/>
+                    <Label x:Name="MASLbl" Content="MAS Activation Script" 
+                           FontSize="18" VerticalContentAlignment="Center" 
+                           HorizontalContentAlignment="Center"/>
+                    <Button Content="Запустить активатор" 
+                            FontSize="16" Click="OffTransClick" Width="340"/>
                 </StackPanel>
             </TabItem>
         </TabControl>
         <Button Name="AllBtn" Content="Настроить все" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
                 Margin="394,32,0,0" Width="310" Click="All_Click" Height="135"  FontSize="32"/>
-
         <Button Name="GitHubBtn" Content="GitHub" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
                 Margin="394,172,0,0" Width="310" Click="GitHub_Click" Height="68" FontSize="32"/>
-
         <Button Name="ExitBtn" Content="Закрыть программу" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
                 Margin="394,245,0,0" Width="310" Click="Exit_Click" Height="68" FontSize="32"/>
