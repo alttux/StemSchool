@@ -56,7 +56,7 @@
                     </Grid>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Запреты">
+            <TabItem Header="Групповые политики">
                 <StackPanel Margin="10,10,320,10">
                     <Label x:Name="WalpaperLbl" Content="Обои" 
                            FontSize="18" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
