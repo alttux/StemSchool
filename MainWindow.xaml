@@ -83,6 +83,34 @@
                             FontSize="16" Click="KMSServClick" Margin="0 0 0 0" Width="340"/>
                     <Button Content="Применить ключ (Pro Only)" 
                             FontSize="16" Click="ProKeyClick" Margin="0 10 0 0" Width="340"/>
+                    <Label Content="Выберете версию Windows" Margin="0 10 0 0"
+                           VerticalContentAlignment="Center" HorizontalAlignment="Center"/>
+                    <Grid Margin="10 10 10 0" Width="340">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Pro" 
+                                FontSize="16" Click="ProKeyClick"/>
+                        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
+                                HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                        <Button Grid.Column="2" Content="Home" 
+                                FontSize="16" Click="HomeKeyClick"/>
+                    </Grid>
+                    <Grid Margin="10 10 10 0" Width="340">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Education" 
+                                FontSize="16" Click="EducationKeyClick"/>
+                        <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
+                                HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+                        <Button Grid.Column="2" Content="Enterprice" 
+                                FontSize="16" Click="EnterpriceKeyClick"/>
+                    </Grid>
                     <Button Grid.Column="0" Content="Применить" 
                             FontSize="16" Click="ActivateClick" Margin="0 10 0 0"  Width="340"/>
                     <Label x:Name="MASLbl" Content="MAS Activation Script" 

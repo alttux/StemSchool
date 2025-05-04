@@ -101,12 +101,25 @@ namespace StemSchool
         }
         private void ProKeyClick(object sender, RoutedEventArgs e)
         {
-            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ipk W269N-WFGWX-YVC9B-4J6C9-T83GX\""); // 2. Set Activation key
+            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ipk W269N-WFGWX-YVC9B-4J6C9-T83GX\""); // 2. Set Pro Activation key
+        }
+
+        private void HomeKeyClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ipk TX9XD-98N7V-6WMQ6-BX7FG-H8Q99\"");
+        }
+        private void EducationKeyClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ipk NW6C2-QMPVW-D7KKK-3GKT6-VCFB2\"");
+        }
+        private void EnterpriceKeyClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ipk NPPR9-FWDCX-D2C8J-H872K-2YT43\"");
         }
 
         private void ActivateClick(object sender, RoutedEventArgs e)
         {
-            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ato\""); // 3. Apply activation
+            Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ato\""); // 3. activation
         }
 
         public static class Globals
