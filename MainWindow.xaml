@@ -117,7 +117,7 @@
                            FontSize="18" VerticalContentAlignment="Center" 
                            HorizontalContentAlignment="Center"/>
                     <Button Content="Запустить активатор" 
-                            FontSize="16" Click="OffTransClick" Width="340"/>
+                            FontSize="16" Click="MASClick" Width="340"/>
                 </StackPanel>
             </TabItem>
         </TabControl>

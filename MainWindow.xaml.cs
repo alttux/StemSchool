@@ -51,7 +51,7 @@ namespace StemSchool
         }
         private void GitHub_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(new ProcessStartInfo("https://github.com/CodeCraftsman89")
+            Process.Start(new ProcessStartInfo("https://github.com/alttux")
             {
                 UseShellExecute = true
             });
@@ -121,6 +121,13 @@ namespace StemSchool
         {
             Process.Start("cmd.exe", "/wait /c \"slmgr.vbs /ato\""); // 3. activation
         }
+
+        private void MASClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("powershell.exe", "irm https://get.activated.win | iex");
+        }
+
+        // ТУТ БУДЕТ КНОПКА КОТОРАЯ ПЕРЕЗАПУКАЕТ ПРОВОДНИК ЧЕСТНО
 
         public static class Globals
         {
