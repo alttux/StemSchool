@@ -127,7 +127,10 @@ namespace StemSchool
             Process.Start("powershell.exe", "irm https://get.activated.win | iex");
         }
 
-        // ТУТ БУДЕТ КНОПКА КОТОРАЯ ПЕРЕЗАПУКАЕТ ПРОВОДНИК ЧЕСТНО
+        private void ExplorerRestartClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("cmd.exe", "/C taskkill /f /im explorer.exe & start explorer.exe");
+        }
 
         public static class Globals
         {

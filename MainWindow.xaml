@@ -122,14 +122,20 @@
             </TabItem>
         </TabControl>
         <Button Name="AllBtn" Content="Настроить все" 
-                HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="394,32,0,0" Width="310" Click="All_Click" Height="135"  FontSize="32"/>
+                HorizontalAlignment="Left" VerticalAlignment="Top"    
+                Margin="394,32,0,0" Width="310" Click="All_Click" Height="70" 
+                FontSize="32"/>
         <Button Name="GitHubBtn" Content="GitHub" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="394,172,0,0" Width="310" Click="GitHub_Click" Height="68" FontSize="32"/>
+                Margin="394,107,0,0" Width="310" Click="GitHub_Click"
+                Height="70" FontSize="32"/>
+        <Button Name="ExplorerRestartBtn" Content="Перезапустить проводник" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Margin="394,182,0,0" Width="310" Click="ExplorerRestartClick" 
+                Height="70" FontSize="23"/>
         <Button Name="ExitBtn" Content="Закрыть программу" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="394,245,0,0" Width="310" Click="Exit_Click" Height="68" FontSize="32"/>
-
+                Margin="394,257,0,0" Width="310" Click="Exit_Click" 
+                Height="70" FontSize="32"/>
     </Grid>
 </Window>
