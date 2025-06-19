@@ -16,9 +16,9 @@
                     <TextBox x:Name="PortTextBox" Text="3128" 
                              Width="336" Height="60" FontSize="42" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,0" />
                     <Button x:Name="ApplyProxyBtn" Content="Применить прокси" 
-                            Width="336" Height="68" FontSize="32" Click="SetProxy" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,0"/>
+                            Width="336" Height="68" FontSize="32" Click="SetProxyClick" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,15,0,0"/>
                     <Button Name="InstCertBtn" Content="Установить cert.msi" 
-                            HorizontalAlignment="Left" VerticalAlignment="Top" Width="334" Height="68" FontSize="32" Click="Cert_Click" Margin="0,15,0,0"/>
+                            HorizontalAlignment="Left" VerticalAlignment="Top" Width="334" Height="68" FontSize="32" Click="CertClick" Margin="0,15,0,0"/>
 
                 </StackPanel>
             </TabItem>
@@ -123,19 +123,15 @@
         </TabControl>
         <Button Name="AllBtn" Content="Настроить все" 
                 HorizontalAlignment="Left" VerticalAlignment="Top"    
-                Margin="394,32,0,0" Width="310" Click="All_Click" Height="70" 
+                Margin="394,32,0,0" Width="310" Click="AllClick" Height="70" 
                 FontSize="32"/>
         <Button Name="GitHubBtn" Content="GitHub" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="394,107,0,0" Width="310" Click="GitHub_Click"
+                Margin="394,107,0,0" Width="310" Click="GitHubClick"
                 Height="70" FontSize="32"/>
         <Button Name="ExplorerRestartBtn" Content="Перезапустить проводник" 
                 HorizontalAlignment="Left" VerticalAlignment="Top" 
                 Margin="394,182,0,0" Width="310" Click="ExplorerRestartClick" 
                 Height="70" FontSize="23"/>
-        <Button Name="ExitBtn" Content="Закрыть программу" 
-                HorizontalAlignment="Left" VerticalAlignment="Top" 
-                Margin="394,257,0,0" Width="310" Click="Exit_Click" 
-                Height="70" FontSize="32"/>
     </Grid>
 </Window>

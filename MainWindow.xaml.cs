@@ -25,23 +25,23 @@ namespace StemSchool
             InitializeComponent();
         }
 
-        // Заглушки для кнопок
-        private void SetProxy(object sender, RoutedEventArgs e)
+        private void SetProxyClick(object sender, RoutedEventArgs e)
         {
+
             globalProxyAddr = ProxyTextBox.Text;
             globalProxyPort = Convert.ToInt32(PortTextBox.Text);
             Tweaks.SetProxy(globalProxyAddr, globalProxyPort, 1);
             MessageBox.Show(Globals.Message);
         }
 
-        private void Cert_Click(object sender, RoutedEventArgs e)
+        private void CertClick(object sender, RoutedEventArgs e)
         {
             Tweaks.RunMsiInstaller(msiName);
         }
-        private void All_Click(object sender, RoutedEventArgs e)
+
+        private void AllClick(object sender, RoutedEventArgs e)
         {
             Tweaks.RunMsiInstaller(msiName);
-            MessageBox.Show("ESPD настроен");
             globalProxyAddr = ProxyTextBox.Text;
             globalProxyPort = Convert.ToInt32(PortTextBox.Text);
             Tweaks.SetProxy(globalProxyAddr, globalProxyPort, 1);
@@ -49,17 +49,13 @@ namespace StemSchool
             Tweaks.DisableAllAnimations();
             Tweaks.DisableWallpaperChanging(true);
         }
-        private void GitHub_Click(object sender, RoutedEventArgs e)
+
+        private void GitHubClick(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo("https://github.com/alttux")
             {
                 UseShellExecute = true
             });
-        }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
         }
 
         private void OnAniClick(object sender, RoutedEventArgs e)
@@ -71,7 +67,6 @@ namespace StemSchool
         private void OffAniClick(object sender, RoutedEventArgs e)
         {
             Tweaks.DisableAllAnimations();
-            // Остальной код приложения
             MessageBox.Show(Globals.Message);
         }
         private void OnTransClick(object sender, RoutedEventArgs e)
