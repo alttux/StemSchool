@@ -11,15 +11,24 @@ namespace StemSchool
 {
 
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Главное окно приложения StemSchool Tweaker
     /// </summary>
-    /// 
+    /// <remarks>
+    /// <para>Это приложение предоставляет набор инструментов для настройки системы:</para>
+    /// <list type="bullet">
+    ///   <item>Настройка прокси-сервера</item>
+    ///   <item>Установка сертификатов</item>
+    ///   <item>Оптимизация производительности (анимации, эффекты прозрачности)</item>
+    ///   <item>Управление групповыми политиками (ограничение смены обоев)</item>
+    ///   <item>Активация Windows через KMS</item>
+    /// </list>
+    /// <para>Приложение использует системный реестр и Windows API для изменения настроек.</para>
+    /// </remarks>
     public partial class MainWindow : Window
     {
         private string globalProxyAddr;
         private int globalProxyPort;
-        const string msiName = "cert_install_v2.msi";
-        
+        const string msiName = "cert_install_v2.msi";        
 
         public MainWindow()
         {
@@ -28,7 +37,6 @@ namespace StemSchool
 
         private void SetProxyClick(object sender, RoutedEventArgs e)
         {
-
             globalProxyAddr = ProxyTextBox.Text;
             globalProxyPort = Convert.ToInt32(PortTextBox.Text);
             Tweaks.SetProxy(globalProxyAddr, globalProxyPort, 1);
@@ -133,6 +141,19 @@ namespace StemSchool
             public static string Message = "";
         }
 
+        /// <summary>
+        /// Класс, содержащий методы для настройки системы
+        /// </summary>
+        /// <remarks>
+        /// Содержит методы для работы с:
+        /// <list type="bullet">
+        ///   <item>Настройками прокси</item>
+        ///   <item>Анимациями и визуальными эффектами</item>
+        ///   <item>Параметрами прозрачности</item>
+        ///   <item>Ограничениями на смену обоев</item>
+        /// </list>
+        /// Использует Windows API и системный реестр для применения изменений.
+        /// </remarks>
         public class Tweaks
         {
             // Настройка прокси сервера
