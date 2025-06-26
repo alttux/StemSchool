@@ -20,6 +20,21 @@ namespace StemSchool
         private int globalProxyPort;
         const string msiName = "cert_install_v2.msi";
 
+        const uint SPI_SETCLIENTAREAANIMATION = 0x1043;
+        const uint SPI_SETANIMATION = 0x0049;
+        const uint SPIF_UPDATEINIFILE = 0x01;
+        const uint SPIF_SENDCHANGE = 0x02;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct ANIMATIONINFO
+        {
+            public uint cbSize;
+            public int iMinAnimate;
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
+
         public MainWindow()
         {
             InitializeComponent();
@@ -45,8 +60,8 @@ namespace StemSchool
             globalProxyAddr = ProxyTextBox.Text;
             globalProxyPort = Convert.ToInt32(PortTextBox.Text);
             Tweaks.SetProxy(globalProxyAddr, globalProxyPort, 1);
-            Tweaks.DisableTransparencyEffects();
-            Tweaks.DisableAllAnimations();
+            Tweaks.TransparencyEffects(true);
+            Tweaks.AllAnimations(true);
             Tweaks.DisableWallpaperChanging(true);
         }
 
@@ -60,23 +75,23 @@ namespace StemSchool
 
         private void OnAniClick(object sender, RoutedEventArgs e)
         {
-            Tweaks.EnableAllAnimations();
+            Tweaks.AllAnimations(false);
             MessageBox.Show(Globals.Message);
         }
 
         private void OffAniClick(object sender, RoutedEventArgs e)
         {
-            Tweaks.DisableAllAnimations();
+            Tweaks.AllAnimations(true);
             MessageBox.Show(Globals.Message);
         }
         private void OnTransClick(object sender, RoutedEventArgs e)
         {
-            Tweaks.EnableTransparencyEffects();
+            Tweaks.TransparencyEffects(false);
             MessageBox.Show(Globals.Message);
         }
         private void OffTransClick(object sender, RoutedEventArgs e)
         {
-            Tweaks.DisableTransparencyEffects();
+            Tweaks.TransparencyEffects(true);
             MessageBox.Show(Globals.Message);
         }
         private void OnWalpaperClick(object sender, RoutedEventArgs e)
@@ -193,84 +208,48 @@ namespace StemSchool
             [DllImport("user32.dll", SetLastError = true)]
             static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
 
-            public static void EnableAllAnimations()
+            public static void UpdateSettings()
             {
-                try
-                {
-                    // 1. Включаем анимацию клиентской области окон
-                    if (!SystemParametersInfo(SPI_SETCLIENTAREAANIMATION, 1, IntPtr.Zero, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE))
-                    {
-                        Globals.Message = $"⚠ Ошибка включения анимации клиентской области: {Marshal.GetLastWin32Error()}";
-                    }
-
-                    // 2. Включаем анимации окон (разворачивание/сворачивание)
-                    ANIMATIONINFO animInfo = new ANIMATIONINFO { cbSize = (uint)Marshal.SizeOf(typeof(ANIMATIONINFO)), iMinAnimate = 1 };
-                    IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ANIMATIONINFO)));
-                    Marshal.StructureToPtr(animInfo, ptr, false);
-                    if (!SystemParametersInfo(SPI_SETANIMATION, (uint)Marshal.SizeOf(typeof(ANIMATIONINFO)), ptr, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE))
-                    {
-                        Globals.Message = $"Ошибка включения анимации окон: {Marshal.GetLastWin32Error()}";
-                    }
-                    Marshal.FreeHGlobal(ptr);
-
-                    // 3. Включаем анимации через реестр
-                    RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop\WindowMetrics", true);
-                    if (key != null)
-                    {
-                        key.SetValue("MinAnimate", "1", RegistryValueKind.String);
-                        key.Close();
-                    }
-
-                    ApplyChanges();
-
-                    Globals.Message = "Все анимации включены!";
-                }
-                catch (Exception ex)
-                {
-                    Globals.Message = $"Ошибка {ex}";
-                }
+                Process.Start("RUNDLL32.EXE", "USER32.DLL,UpdatePerUserSystemParameters ,1 ,True");
             }
 
-            public static void DisableAllAnimations()
+            public static void AllAnimations(bool disable)
             {
                 try
                 {
-                    // 1. Отключаем анимацию клиентской области окон
-                    SystemParametersInfo(SPI_SETCLIENTAREAANIMATION, 0, IntPtr.Zero, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
+                    // 1. Управление анимацией клиентской области окон
+                    SystemParametersInfo(SPI_SETCLIENTAREAANIMATION, disable ? 0u : 1u, IntPtr.Zero, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
 
-                    // 2. Отключаем анимации окон (разворачивание/сворачивание)
-                    ANIMATIONINFO animInfo = new ANIMATIONINFO { cbSize = (uint)Marshal.SizeOf(typeof(ANIMATIONINFO)), iMinAnimate = 0 };
+                    // 2. Управление анимациями окон (разворачивание/сворачивание)
+                    ANIMATIONINFO animInfo = new ANIMATIONINFO
+                    {
+                        cbSize = (uint)Marshal.SizeOf(typeof(ANIMATIONINFO)),
+                        iMinAnimate = disable ? 0 : 1
+                    };
                     IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ANIMATIONINFO)));
                     Marshal.StructureToPtr(animInfo, ptr, false);
                     SystemParametersInfo(SPI_SETANIMATION, (uint)Marshal.SizeOf(typeof(ANIMATIONINFO)), ptr, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
                     Marshal.FreeHGlobal(ptr);
 
-                    // 3. Отключаем анимации через реестр
+                    // 3. Управление анимациями через реестр
                     RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop\WindowMetrics", true);
                     if (key != null)
                     {
-                        key.SetValue("MinAnimate", "0", RegistryValueKind.String);
+                        key.SetValue("MinAnimate", disable ? "0" : "1", RegistryValueKind.String);
                         key.Close();
                     }
 
-                    // 4. Применяем изменения без перезагрузки
-                    ApplyChanges();
+                    UpdateSettings();
 
-                    Globals.Message = "Все анимации отключены!";
+                    Globals.Message = disable ? "Все анимации отключены!" : "Все анимации включены!";
                 }
                 catch (Exception ex)
                 {
-                    Globals.Message = $"Ошибка {ex}";
+                    Globals.Message = $"Ошибка при изменении настроек анимации: {ex.Message}";
                 }
             }
 
-            // 🔹 Применение настроек без перезагрузки
-            private static void ApplyChanges()
-            {
-                Process.Start("RUNDLL32.EXE", "USER32.DLL,UpdatePerUserSystemParameters ,1 ,True");
-            }
-
-            public static void DisableTransparencyEffects()
+            public static void TransparencyEffects(bool disable)
             {
                 try
                 {
@@ -278,43 +257,13 @@ namespace StemSchool
                     RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", true);
                     if (key != null)
                     {
-                        key.SetValue("EnableTransparency", 0, RegistryValueKind.DWord); // 0 = Отключить прозрачность
+                        key.SetValue("EnableTransparency", disable ? 0 : 1, RegistryValueKind.DWord); // 0 = Отключить прозрачность
                         key.Close();
                     }
 
-                    // Применяем изменения без перезагрузки
-                    ApplyChangesTrans();
+                    UpdateSettings();
 
-                    Globals.Message = "Все прозрачности отключены!";
-
-                }
-                catch (Exception ex)
-                {
-                    Globals.Message = $"Ошибка {ex}";
-                }
-            }
-
-            // 🔹 Применение настроек без перезагрузки
-            private static void ApplyChangesTrans()
-            {
-                Process.Start("RUNDLL32.EXE", "USER32.DLL,UpdatePerUserSystemParameters ,1 ,True");
-            }
-
-
-            // ✅ Метод для включения прозрачности обратно
-            public static void EnableTransparencyEffects()
-            {
-                try
-                {
-                    RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", true);
-                    if (key != null)
-                    {
-                        key.SetValue("EnableTransparency", 1, RegistryValueKind.DWord); // 1 = Включить прозрачность
-                        key.Close();
-                    }
-
-                    ApplyChangesTrans();
-                    Globals.Message = "Все прозрачности включены!";
+                    Globals.Message = disable ? "Все прозрачности отключены!" : "Все прозрачности включены!";
 
                 }
                 catch (Exception ex)
