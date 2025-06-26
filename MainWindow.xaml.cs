@@ -19,21 +19,7 @@ namespace StemSchool
         private string globalProxyAddr;
         private int globalProxyPort;
         const string msiName = "cert_install_v2.msi";
-
-        const uint SPI_SETCLIENTAREAANIMATION = 0x1043;
-        const uint SPI_SETANIMATION = 0x0049;
-        const uint SPIF_UPDATEINIFILE = 0x01;
-        const uint SPIF_SENDCHANGE = 0x02;
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct ANIMATIONINFO
-        {
-            public uint cbSize;
-            public int iMinAnimate;
-        }
-
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
+        
 
         public MainWindow()
         {
