@@ -9,6 +9,7 @@
     <PackageIcon>image_2025-03-18_07-00-51.png</PackageIcon>
     <ApplicationIcon>image_2025-03-18_07-00-51.ico</ApplicationIcon>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	  <Version>1.3</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 

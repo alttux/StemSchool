@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StemSchool"
         mc:Ignorable="d"
-        Title="StemSchool Tweaker" Height="400" Width="450" ResizeMode="CanResize" Icon="/image_2025-03-18_07-00-51.png">
+        Title="StemSchool Tweaker" Height="400" Width="450" ResizeMode="CanResize" MinHeight="370" MinWidth="200"
+        Icon="/image_2025-03-18_07-00-51.png">
     <Grid>
         <TabControl Grid.Column="0" VerticalAlignment="Top">
             <TabItem Header="Сеть">
