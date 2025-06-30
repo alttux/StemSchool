@@ -1,7 +1,7 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 using System.Windows;
-using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace StemSchool;
 
@@ -12,6 +12,7 @@ public partial class App : Application
 {
     protected override void OnStartup(StartupEventArgs e)
     {
+        
     }
  }
 

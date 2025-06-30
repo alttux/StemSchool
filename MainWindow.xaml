@@ -5,11 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StemSchool"
         mc:Ignorable="d"
-        Title="StemSchool Tweaker" Height="400" Width="450" ResizeMode="CanResize" MinHeight="370" MinWidth="200"
-        Icon="/image_2025-03-18_07-00-51.png">
+        Title="StemSchool Tweaker" Height="400" Width="650" 
+        ResizeMode="CanResize" MinHeight="370" MinWidth="600"
+        Icon="/image_2025-03-18_07-00-51.png" 
+        Style="{StaticResource MaterialDesignWindow}"
+        Background="{DynamicResource MaterialDesign.Brush.Background}"
+        TextElement.FontWeight="Thin">
     <Grid>
-        <TabControl Grid.Column="0" VerticalAlignment="Top">
-            <TabItem Header="Сеть">
+        <TabControl VerticalAlignment="Top">
+            <TabItem Header="Сеть" Width="40" HorizontalAlignment="Left">
                 <StackPanel Margin="0 0 15 0" CanHorizontallyScroll="True" CanVerticallyScroll="True">
                     <TextBox x:Name="ProxyTextBox" Text="10.0.50.52" Height="36" FontSize="26" 
                              HorizontalAlignment="Stretch" VerticalAlignment="Top" 
@@ -28,7 +32,7 @@
 
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Оптимизация">
+            <TabItem Header="Оптимизация" HorizontalAlignment="Left" Margin="-70 0 0 0">
                 <StackPanel Margin="0 0 15 0" CanHorizontallyScroll="True" CanVerticallyScroll="True">
                     <Label Content="Анимации и тени" FontSize="20"
                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
@@ -54,11 +58,11 @@
                         <Button Grid.Column="0" Content="Выключить прозрачность" 
                                 FontSize="18" Click="OffTransClick"/>
                         <Button Grid.Column="2" Content="Включить прозрачность" 
-                                FontSize="18" Click="OnTransClick" Margin="0,0,10,0"/>
+                                FontSize="18" Click="OnTransClick"/>
                     </Grid>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Групповые политики">
+            <TabItem Header="Групповые политики" HorizontalAlignment="Left" Margin="-100 0 0 0">
                 <StackPanel Margin="0 0 15 0" CanHorizontallyScroll="True" CanVerticallyScroll="True">
                     <Label Content="Обои" 
                            FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
@@ -96,7 +100,7 @@
 
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Активация">
+            <TabItem Header="Активация" HorizontalAlignment="Left" Margin="-80 0 0 0">
                 <StackPanel Margin="0 0 15 0" CanHorizontallyScroll="True" CanVerticallyScroll="True">
                     <Label x:Name="ActivateLbl" Content="Активация Windows (KMS)" 
                            FontSize="20" HorizontalContentAlignment="Center" />

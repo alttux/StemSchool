@@ -1,11 +1,8 @@
-﻿using System.Diagnostics;
-using System.Windows;
-using System.Windows.Shapes;
-using Microsoft.Win32;
-using System;
+﻿using Microsoft.Win32;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Windows.Interop;
+using System.Windows;
 
 namespace StemSchool
 {
@@ -28,7 +25,7 @@ namespace StemSchool
     {
         private string globalProxyAddr;
         private int globalProxyPort;
-        const string msiName = "cert_install_v2.msi";        
+        const string msiName = "cert_install_v2.msi";
 
         public MainWindow()
         {
