@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Media;
+using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
 namespace StemSchool
 {
@@ -130,7 +132,30 @@ namespace StemSchool
 
         private void ExplorerRestartClick(object sender, RoutedEventArgs e)
         {
-            Process.Start("cmd.exe", "/C taskkill /f /im explorer.exe & start explorer.exe");
+            // Завершаем процесс explorer.exe
+            foreach (var process in Process.GetProcessesByName("explorer"))
+            {
+                process.Kill();
+            }
+
+            // Запускаем explorer.exe снова
+            Process.Start("explorer.exe");
+        }
+        private void OffTelemetryClick(object sender, RoutedEventArgs e)
+        { 
+            Tweaks.Telemetry(true);
+            MessageBox.Show(Globals.Message);
+        }
+        private void OnTelemetryClick(object sender, RoutedEventArgs e)
+        {
+            Tweaks.Telemetry(false);
+            if (MessageBox.Show($"{Globals.Message}",
+                            "Reboot now?",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Process.Start("shutdown.exe", "/r /t 0");
+            }
         }
 
         public static class Globals
@@ -167,11 +192,14 @@ namespace StemSchool
                             key.SetValue("ProxyServer", $"{proxyAddress}:{port}");
                         }
                     }
-                    Globals.Message = "Прокси настроен";
                 }
                 catch (Exception ex)
                 {
                     Globals.Message = $"Ошибка настройки прокси: {ex.Message}";
+                }
+                finally
+                {
+                    Globals.Message = "Прокси настроен";
                 }
             }
 
@@ -182,18 +210,29 @@ namespace StemSchool
 
                 if (File.Exists(msiPath))
                 {
-                    Process.Start(new ProcessStartInfo
+                    try
                     {
-                        FileName = "msiexec.exe",
-                        Arguments = $"/i \"{msiPath}\" /qb", // /qn - тихая установка без окон
-                        UseShellExecute = false
-                    });
-                    Globals.Message = $"Запущена установка: {msiPath}";
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = "msiexec.exe",
+                            Arguments = $"/i \"{msiPath}\" /qb", // /qn - тихая установка без окон
+                            UseShellExecute = false
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        Globals.Message = $"Ошибка при запуске установки: {ex.Message}";
+                    }
+                    finally 
+                    {
+                        Globals.Message = $"Запущена установка: {msiPath}";
+                    }
                 }
                 else
                 {
                     Globals.Message = $"Файл не найден: {msiPath}";
                 }
+
             }
 
             // Хз как работает. Онимации
@@ -243,13 +282,16 @@ namespace StemSchool
                         key.Close();
                     }
 
-                    UpdateSettings();
 
-                    Globals.Message = disable ? "Все анимации отключены!" : "Все анимации включены!";
                 }
                 catch (Exception ex)
                 {
                     Globals.Message = $"Ошибка при изменении настроек анимации: {ex.Message}";
+                }
+                finally
+                {
+                    UpdateSettings();
+                    Globals.Message = disable ? "Все анимации отключены!" : "Все анимации включены!";
                 }
             }
 
@@ -265,14 +307,15 @@ namespace StemSchool
                         key.Close();
                     }
 
-                    UpdateSettings();
-
-                    Globals.Message = disable ? "Все прозрачности отключены!" : "Все прозрачности включены!";
-
                 }
                 catch (Exception ex)
                 {
                     Globals.Message = $"Ошибка {ex}";
+                }
+                finally
+                {
+                    UpdateSettings();
+                    Globals.Message = disable ? "Все прозрачности отключены!" : "Все прозрачности включены!";
                 }
             }
 
@@ -292,19 +335,95 @@ namespace StemSchool
                     // Также можно установить политику в другом месте реестра (для некоторых версий Windows)
                     registryPath = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System";
                     Registry.SetValue(registryPath, valueName, value, RegistryValueKind.DWord);
-
-                    if (disable)
-                    {
-                        Globals.Message = "Смена обоев запрещена.";
-                    }
-                    else
-                    {
-                        Globals.Message = "Смена обоев разрешена.";
-                    }
                 }
                 catch (Exception ex)
                 {
                     Globals.Message = $"Ошибка при изменении настроек: {ex.Message}";
+                }
+                finally
+                {
+                    Globals.Message = disable ? "Смена обоев запрещена." : "Смена обоев разрешена.";
+                }
+            }
+
+            public static void Telemetry(bool disable)
+            {
+                if (disable)
+                {
+                    try
+                    {
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection").SetValue("AllowTelemetry", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection").SetValue("AllowTelemetry", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection").SetValue("MaxTelemetryAllowed", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform").SetValue("NoGenTicket", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection").SetValue("DoNotShowFeedbackNotifications", 1);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("AITEnable", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("AllowTelemetry", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("DisableEngine", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("DisableInventory", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("DisablePCA", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("DisableUAR", 1);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics").SetValue("Value", "Deny", RegistryValueKind.String);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\System").SetValue("UploadUserActivities", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\System").SetValue("PublishUserActivities", 0);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}").SetValue("ScenarioExecutionEnabled", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\DeviceHealthAttestationService").SetValue("EnableDeviceHealthAttestationService", 0);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\InputPersonalization").SetValue("RestrictImplicitTextCollection", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\InputPersonalization").SetValue("RestrictImplicitInkCollection", 0);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Speech").SetValue("AllowSpeechModelUpdate", 0);
+                    }
+                    catch (Exception ex)
+                    {
+                        Globals.Message = $"Ошибка при отключении телеметрии: {ex.Message}";
+                    }
+                    finally
+                    {
+                        Globals.Message = "Телеметрия отключена!";
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection").SetValue("AllowTelemetry", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection").SetValue("AllowTelemetry", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection").SetValue("MaxTelemetryAllowed", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform").SetValue("NoGenTicket", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection").SetValue("DoNotShowFeedbackNotifications", 0);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("AITEnable", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("AllowTelemetry", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("DisableEngine", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("DisableInventory", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("DisablePCA", 0);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\AppCompat").SetValue("DisableUAR", 0);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\System").SetValue("UploadUserActivities", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\System").SetValue("PublishUserActivities", 2);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WDI\{9c5a40da-b965-4fc3-8781-88dd50a6299d}").SetValue("ScenarioExecutionEnabled", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\DeviceHealthAttestationService").SetValue("EnableDeviceHealthAttestationService", 1);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\InputPersonalization").SetValue("RestrictImplicitTextCollection", 1);
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\InputPersonalization").SetValue("RestrictImplicitInkCollection", 1);
+
+                        Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Speech").SetValue("AllowSpeechModelUpdate", 1);
+                    }
+                    catch (Exception ex)
+                                        {
+                        Globals.Message = $"Ошибка при включении телеметрии: {ex.Message}";
+                    }
+                    finally
+                    {
+                        Globals.Message = "Телеметрия включена!";
+                    }
+
                 }
             }
         }
