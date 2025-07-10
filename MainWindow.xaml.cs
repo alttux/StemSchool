@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Media;
-using static System.Runtime.InteropServices.Marshalling.IIUnknownCacheStrategy;
 
 namespace StemSchool
 {
@@ -18,7 +16,7 @@ namespace StemSchool
     ///   <item>Настройка прокси-сервера</item>
     ///   <item>Установка сертификатов</item>
     ///   <item>Оптимизация производительности (анимации, эффекты прозрачности)</item>
-    ///   <item>Управление групповыми политиками (ограничение смены обоев)</item>
+    ///   <item>Управление групповыми политиками (ограничение смены обоев)< /item>
     ///   <item>Активация Windows через KMS</item>
     /// </list>
     /// <para>Приложение использует системный реестр и Windows API для изменения настроек.</para>
@@ -28,10 +26,12 @@ namespace StemSchool
         private string globalProxyAddr;
         private int globalProxyPort;
         const string msiName = "cert_install_v2.msi";
+        private string wallPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wall.png");
 
         public MainWindow()
         {
             InitializeComponent();
+            WallTextBox.Text = wallPath;
         }
 
         private void SetProxyClick(object sender, RoutedEventArgs e)
@@ -141,26 +141,58 @@ namespace StemSchool
             // Запускаем explorer.exe снова
             Process.Start("explorer.exe");
         }
+
         private void OffTelemetryClick(object sender, RoutedEventArgs e)
         { 
             Tweaks.Telemetry(true);
-            MessageBox.Show(Globals.Message);
-        }
-        private void OnTelemetryClick(object sender, RoutedEventArgs e)
-        {
-            Tweaks.Telemetry(false);
             if (MessageBox.Show($"{Globals.Message}",
-                            "Reboot now?",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Question) == MessageBoxResult.Yes)
+                "Reboot now?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "/r /t 0");
             }
         }
 
+        private void OnTelemetryClick(object sender, RoutedEventArgs e)
+        {
+            Tweaks.Telemetry(false);
+            MessageBox.Show(Globals.Message);
+        }
+
+        private void OpenWallPathClick(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog OpenWallDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Выберите файл обоев",
+                DefaultExt = ".png",
+                Filter = "Изображения (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg|Все файлы (*.*)|*.*",
+                InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
+            };
+            Nullable<bool> result = OpenWallDialog.ShowDialog();
+
+            if (result == true)
+            {
+                // Open document 
+                string filename = OpenWallDialog.FileName;
+                WallTextBox.Text = filename;
+            }
+        }
+
+        private void ResetWallPathClick(object sender, RoutedEventArgs e)
+        {
+            WallTextBox.Text = wallPath;
+        }
+
+        private void SetWallPathClick(object sender, RoutedEventArgs e)
+        {
+            // применяем обои без перезагрузки
+            Tweaks.WallpaperSetter.SetWallpaper(WallTextBox.Text);
+        }
+
         public static class Globals
         {
-            public static string Message = "";
+            public static string Message = "Неизвестное сообщение";
         }
 
         /// <summary>
@@ -425,6 +457,68 @@ namespace StemSchool
                     }
 
                 }
+            }
+
+            public class WallpaperSetter
+            {
+                public enum WallpaperStyle
+                {
+                    Tiled,
+                    Centered,
+                    Stretched,
+                    Fit,
+                    Fill
+                }
+
+                public static void SetWallpaper(string imagePath, WallpaperStyle style = WallpaperStyle.Fill)
+                {
+                    try
+                    {
+                        // Устанавливаем стиль обоев
+                        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
+
+                        switch (style)
+                        {
+                            case WallpaperStyle.Tiled:
+                                key.SetValue(@"WallpaperStyle", "0");
+                                key.SetValue(@"TileWallpaper", "1");
+                                break;
+                            case WallpaperStyle.Centered:
+                                key.SetValue(@"WallpaperStyle", "0");
+                                key.SetValue(@"TileWallpaper", "0");
+                                break;
+                            case WallpaperStyle.Stretched:
+                                key.SetValue(@"WallpaperStyle", "2");
+                                key.SetValue(@"TileWallpaper", "0");
+                                break;
+                            case WallpaperStyle.Fit:
+                                key.SetValue(@"WallpaperStyle", "6");
+                                key.SetValue(@"TileWallpaper", "0");
+                                break;
+                            case WallpaperStyle.Fill:
+                            default:
+                                key.SetValue(@"WallpaperStyle", "10");
+                                key.SetValue(@"TileWallpaper", "0");
+                                break;
+                        }
+
+                        // Устанавливаем обои
+                        SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, imagePath,
+                            SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ошибка при установке обоев: {ex.Message}");
+                    }
+                }
+
+                // Импорт функции SystemParametersInfo
+                [DllImport("user32.dll", CharSet = CharSet.Auto)]
+                private static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+
+                private const int SPI_SETDESKWALLPAPER = 0x0014;
+                private const int SPIF_UPDATEINIFILE = 0x01;
+                private const int SPIF_SENDWININICHANGE = 0x02;
             }
         }
     }

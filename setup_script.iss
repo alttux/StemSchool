@@ -6,6 +6,8 @@
 #define MyAppPublisher "AltTux, Inc."
 #define MyAppURL "https://github.com/alttux/StemSchool/releases"
 #define MyAppExeName "StemSchool.exe"
+#define MyAppDir "C:\Users\roma-win\Desktop\StemSchool\bin\Release\net8.0-windows\win-x64\"
+#define SourceDir "C:\Users\roma-win\Desktop\StemSchool\"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -29,13 +31,13 @@ ArchitecturesAllowed=x64compatible
 ; the 64-bit view of the registry.
 ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
-LicenseFile=C:\Users\Roma-rm\Desktop\StemSchool\LICENSE.txt
+LicenseFile=C:\Users\roma-win\Desktop\StemSchool\LICENSE.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
-OutputDir=C:\Users\Roma-rm\Desktop\StemSchool\bin\Release
+OutputDir=C:\Users\roma-win\Desktop\StemSchool\bin\Release
 OutputBaseFilename=Stemschool Tweaker Setup
-SetupIconFile=C:\Users\Roma-rm\Desktop\StemSchool\image_2025-03-18_07-00-51.ico
+SetupIconFile=C:\Users\roma-win\Desktop\StemSchool\image_2025-03-18_07-00-51.ico
 SolidCompression=yes
 WizardStyle=modern
 
@@ -46,8 +48,9 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Roma-rm\Desktop\StemSchool\bin\Release\net8.0-windows\win-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Roma-rm\Desktop\StemSchool\bin\Release\net8.0-windows\win-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppDir}{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppDir}*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#SourceDir}windowsdesktop-runtime-8.0.18-win-x86.exe"; DestDir: "{app}"; Flags: deleteafterinstall
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -56,4 +59,47 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\windowsdesktop-runtime-8.0.18-win-x86.exe"; Parameters: "/silent"; StatusMsg: "Устанавливаем необходимые компоненты..."; BeforeInstall: PrepareDependency; Check: IsDependencyInstallationNeeded
+
+[Code]
+var
+  DependencyPage: TOutputProgressWizardPage;
+
+procedure PrepareDependency;
+begin
+  DependencyPage := CreateOutputProgressPage(
+    'Установка зависимостей', 
+    'Пожалуйста, подождите, пока устанавливаются необходимые компоненты...');
+  DependencyPage.Show;
+  try
+    // Здесь можно добавить дополнительную подготовку
+  finally
+    DependencyPage.Hide;
+  end;
+end;
+
+function IsDependencyInstallationNeeded: Boolean;
+begin
+  // Здесь реализуйте проверку, установлена ли зависимость
+  // Например, проверка в реестре или наличие файла
+  Result := not RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{Dependency-GUID}');
+  
+  // Альтернативная проверка по наличию файла:
+  // Result := not FileExists(ExpandConstant('{pf}\Dependency\program.exe'));
+end;
+
+function InitializeSetup: Boolean;
+begin
+  // Дополнительная проверка при запуске установщика
+  if IsDependencyInstallationNeeded then
+  begin
+    if MsgBox('Для работы программы требуется .NET 8.0 Desktop Runtime. Установить сейчас?', 
+      mbConfirmation, MB_YESNO) = IDNO then
+    begin
+      Result := False;
+      Exit;
+    end;
+  end;
+  Result := True;
+end;
 

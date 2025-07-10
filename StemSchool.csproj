@@ -11,6 +11,8 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	  <Version>1.4</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Configurations>Debug;Release;Appx</Configurations>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,5 +33,18 @@
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />
   </ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="cert_install_v2.msi"
+			   CopyToOutputDirectory="Always">
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="wall.png"
+				 CopyToOutputDirectory="Always">
+		</Content>
+	</ItemGroup>
+			   
 
 </Project>
