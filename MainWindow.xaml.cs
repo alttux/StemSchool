@@ -224,14 +224,12 @@ namespace StemSchool
                             key.SetValue("ProxyServer", $"{proxyAddress}:{port}");
                         }
                     }
+
+                    Globals.Message = "Прокси настроен";
                 }
                 catch (Exception ex)
                 {
                     Globals.Message = $"Ошибка настройки прокси: {ex.Message}";
-                }
-                finally
-                {
-                    Globals.Message = "Прокси настроен";
                 }
             }
 
@@ -314,16 +312,12 @@ namespace StemSchool
                         key.Close();
                     }
 
-
+                    UpdateSettings();
+                    Globals.Message = disable ? "Все анимации отключены!" : "Все анимации включены!";
                 }
                 catch (Exception ex)
                 {
                     Globals.Message = $"Ошибка при изменении настроек анимации: {ex.Message}";
-                }
-                finally
-                {
-                    UpdateSettings();
-                    Globals.Message = disable ? "Все анимации отключены!" : "Все анимации включены!";
                 }
             }
 
@@ -339,15 +333,13 @@ namespace StemSchool
                         key.Close();
                     }
 
+                    UpdateSettings();
+                    Globals.Message = disable ? "Все прозрачности отключены!" : "Все прозрачности включены!";
+
                 }
                 catch (Exception ex)
                 {
                     Globals.Message = $"Ошибка {ex}";
-                }
-                finally
-                {
-                    UpdateSettings();
-                    Globals.Message = disable ? "Все прозрачности отключены!" : "Все прозрачности включены!";
                 }
             }
 
@@ -367,14 +359,12 @@ namespace StemSchool
                     // Также можно установить политику в другом месте реестра (для некоторых версий Windows)
                     registryPath = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System";
                     Registry.SetValue(registryPath, valueName, value, RegistryValueKind.DWord);
+
+                    Globals.Message = disable ? "Смена обоев запрещена." : "Смена обоев разрешена.";
                 }
                 catch (Exception ex)
                 {
                     Globals.Message = $"Ошибка при изменении настроек: {ex.Message}";
-                }
-                finally
-                {
-                    Globals.Message = disable ? "Смена обоев запрещена." : "Смена обоев разрешена.";
                 }
             }
 
@@ -409,14 +399,12 @@ namespace StemSchool
                         Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\InputPersonalization").SetValue("RestrictImplicitInkCollection", 0);
 
                         Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Speech").SetValue("AllowSpeechModelUpdate", 0);
+
+                        Globals.Message = "Телеметрия отключена!";
                     }
                     catch (Exception ex)
                     {
                         Globals.Message = $"Ошибка при отключении телеметрии: {ex.Message}";
-                    }
-                    finally
-                    {
-                        Globals.Message = "Телеметрия отключена!";
                     }
                 }
                 else
@@ -446,14 +434,12 @@ namespace StemSchool
                         Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\InputPersonalization").SetValue("RestrictImplicitInkCollection", 1);
 
                         Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Speech").SetValue("AllowSpeechModelUpdate", 1);
+
+                        Globals.Message = "Телеметрия включена!";
                     }
                     catch (Exception ex)
                                         {
                         Globals.Message = $"Ошибка при включении телеметрии: {ex.Message}";
-                    }
-                    finally
-                    {
-                        Globals.Message = "Телеметрия включена!";
                     }
 
                 }
