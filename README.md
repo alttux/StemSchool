@@ -6,11 +6,11 @@
 ---
 
 ## Cкриншоты
-![image]()
-![image]()
-![image]()
-![image]()
-![image]()
+![image](https://github.com/alttux/StemSchool/blob/master/Screenshots/main_screen.png)
+![image](https://github.com/alttux/StemSchool/blob/master/Screenshots/opt.png)
+![image](https://github.com/alttux/StemSchool/blob/master/Screenshots/walls.png)
+![image](https://github.com/alttux/StemSchool/blob/master/Screenshots/explorer.png)
+![image](https://github.com/alttux/StemSchool/blob/master/Screenshots/KMS_MAS.png)
 
 ---
 
