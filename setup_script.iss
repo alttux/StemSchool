@@ -6,7 +6,7 @@
 #define MyAppPublisher "AltTux, Inc."
 #define MyAppURL "https://github.com/alttux/StemSchool/releases"
 #define MyAppExeName "StemSchool.exe"
-#define UserDir "roma-mac"
+#define UserDir "roma-tuf"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -57,7 +57,6 @@ Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\windowsdesktop-runtime-8.0.18-win-x86.exe"; Parameters: "/silent"; StatusMsg: "Устанавливаем необходимые компоненты..."; BeforeInstall: PrepareDependency
 
 [Code]
