@@ -23,6 +23,8 @@ namespace StemSchool
     /// </remarks>
     public partial class MainWindow : Window
     {
+        // Глобальные переменные: Сообщения для пользователя, прокси, порт, сертификат, путь к обоям
+        public static string Message = "Неизвестная ошибка";
         private string globalProxyAddr;
         private int globalProxyPort;
         const string msiName = "cert_install_v2.msi";
@@ -39,14 +41,15 @@ namespace StemSchool
             globalProxyAddr = ProxyTextBox.Text;
             globalProxyPort = Convert.ToInt32(PortTextBox.Text);
             Tweaks.SetProxy(globalProxyAddr, globalProxyPort, 1);
-            MessageBox.Show(Globals.Message);
+            MessageBox.Show(Message);
         }
 
         private void CertClick(object sender, RoutedEventArgs e)
         {
             Tweaks.RunMsiInstaller(msiName);
         }
-
+        // Возможно добавиться в будущем
+        /*
         private void AllClick(object sender, RoutedEventArgs e)
         {
             Tweaks.RunMsiInstaller(msiName);
@@ -57,45 +60,54 @@ namespace StemSchool
             Tweaks.AllAnimations(true);
             Tweaks.DisableWallpaperChanging(true);
         }
-
+        */
         private void GitHubClick(object sender, RoutedEventArgs e)
         {
-            Process.Start(new ProcessStartInfo("https://github.com/alttux")
+            try
             {
-                UseShellExecute = true
-            });
+                Process.Start(new ProcessStartInfo("https://github.com/alttux")
+                {
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Message = ex.Message;
+                MessageBox.Show(Message);
+            }
+
         }
 
         private void OnAniClick(object sender, RoutedEventArgs e)
         {
             Tweaks.AllAnimations(false);
-            MessageBox.Show(Globals.Message);
+            MessageBox.Show(Message);
         }
 
         private void OffAniClick(object sender, RoutedEventArgs e)
         {
             Tweaks.AllAnimations(true);
-            MessageBox.Show(Globals.Message);
+            MessageBox.Show(Message);
         }
         private void OnTransClick(object sender, RoutedEventArgs e)
         {
             Tweaks.TransparencyEffects(false);
-            MessageBox.Show(Globals.Message);
+            MessageBox.Show(Message);
         }
         private void OffTransClick(object sender, RoutedEventArgs e)
         {
             Tweaks.TransparencyEffects(true);
-            MessageBox.Show(Globals.Message);
+            MessageBox.Show(Message);
         }
         private void OnWalpaperClick(object sender, RoutedEventArgs e)
         {
             Tweaks.DisableWallpaperChanging(false);
-            MessageBox.Show(Globals.Message);
+            MessageBox.Show(Message);
         }
         private void OffWalpaperClick(object sender, RoutedEventArgs e)
         {
             Tweaks.DisableWallpaperChanging(true);
-            MessageBox.Show(Globals.Message);
+            MessageBox.Show(Message);
         }
 
         private void KMSServClick(object sender, RoutedEventArgs e)
@@ -132,20 +144,29 @@ namespace StemSchool
 
         private void ExplorerRestartClick(object sender, RoutedEventArgs e)
         {
-            // Завершаем процесс explorer.exe
-            foreach (var process in Process.GetProcessesByName("explorer"))
+            try
             {
-                process.Kill();
+                // Завершаем процесс explorer.exe
+                foreach (var process in Process.GetProcessesByName("explorer"))
+                {
+                    process.Kill();
+                }
+
+                // Запускаем explorer.exe снова
+                Process.Start("explorer.exe");
+            }
+            catch(Exception ex)
+            {
+                Message = ex.Message;
+                MessageBox.Show(Message);
             }
 
-            // Запускаем explorer.exe снова
-            Process.Start("explorer.exe");
         }
 
         private void OffTelemetryClick(object sender, RoutedEventArgs e)
         { 
             Tweaks.Telemetry(true);
-            if (MessageBox.Show($"{Globals.Message}",
+            if (MessageBox.Show($"{Message}",
                 "Reboot now?",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question) == MessageBoxResult.Yes)
@@ -157,7 +178,7 @@ namespace StemSchool
         private void OnTelemetryClick(object sender, RoutedEventArgs e)
         {
             Tweaks.Telemetry(false);
-            MessageBox.Show(Globals.Message);
+            MessageBox.Show(Message);
         }
 
         private void OpenWallPathClick(object sender, RoutedEventArgs e)
@@ -173,9 +194,17 @@ namespace StemSchool
 
             if (result == true)
             {
-                // Open document 
-                string filename = OpenWallDialog.FileName;
-                WallTextBox.Text = filename;
+                try
+                {
+                    // Open document 
+                    string filename = OpenWallDialog.FileName;
+                    WallTextBox.Text = filename;
+                }
+                catch (Exception ex)
+                {
+                    Message = ex.Message;
+                    MessageBox.Show(Message);
+                }
             }
         }
 
@@ -224,12 +253,11 @@ namespace StemSchool
                             key.SetValue("ProxyServer", $"{proxyAddress}:{port}");
                         }
                     }
-
-                    Globals.Message = "Прокси настроен";
+                    Message = "Прокси настроен";
                 }
                 catch (Exception ex)
                 {
-                    Globals.Message = $"Ошибка настройки прокси: {ex.Message}";
+                    Message = $"Ошибка настройки прокси: {ex.Message}";
                 }
             }
 
@@ -251,16 +279,16 @@ namespace StemSchool
                     }
                     catch (Exception ex)
                     {
-                        Globals.Message = $"Ошибка при запуске установки: {ex.Message}";
+                        Message = $"Ошибка при запуске установки: {ex.Message}";
                     }
                     finally 
                     {
-                        Globals.Message = $"Запущена установка: {msiPath}";
+                        Message = $"Запущена установка: {msiPath}";
                     }
                 }
                 else
                 {
-                    Globals.Message = $"Файл не найден: {msiPath}";
+                    Message = $"Файл не найден: {msiPath}";
                 }
 
             }
@@ -313,11 +341,11 @@ namespace StemSchool
                     }
 
                     UpdateSettings();
-                    Globals.Message = disable ? "Все анимации отключены!" : "Все анимации включены!";
+                    Message = disable ? "Все анимации отключены!" : "Все анимации включены!";
                 }
                 catch (Exception ex)
                 {
-                    Globals.Message = $"Ошибка при изменении настроек анимации: {ex.Message}";
+                    Message = $"Ошибка при изменении настроек анимации: {ex.Message}";
                 }
             }
 
@@ -334,12 +362,12 @@ namespace StemSchool
                     }
 
                     UpdateSettings();
-                    Globals.Message = disable ? "Все прозрачности отключены!" : "Все прозрачности включены!";
+                    Message = disable ? "Все прозрачности отключены!" : "Все прозрачности включены!";
 
                 }
                 catch (Exception ex)
                 {
-                    Globals.Message = $"Ошибка {ex}";
+                    Message = $"Ошибка {ex}";
                 }
             }
 
@@ -356,15 +384,14 @@ namespace StemSchool
 
                     Registry.SetValue(registryPath, valueName, value, RegistryValueKind.DWord);
 
-                    // Также можно установить политику в другом месте реестра (для некоторых версий Windows)
                     registryPath = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System";
                     Registry.SetValue(registryPath, valueName, value, RegistryValueKind.DWord);
 
-                    Globals.Message = disable ? "Смена обоев запрещена." : "Смена обоев разрешена.";
+                    Message = disable ? "Смена обоев запрещена." : "Смена обоев разрешена.";
                 }
                 catch (Exception ex)
                 {
-                    Globals.Message = $"Ошибка при изменении настроек: {ex.Message}";
+                    Message = $"Ошибка при изменении настроек: {ex.Message}";
                 }
             }
 
@@ -400,11 +427,11 @@ namespace StemSchool
 
                         Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Speech").SetValue("AllowSpeechModelUpdate", 0);
 
-                        Globals.Message = "Телеметрия отключена!";
+                        Message = "Телеметрия отключена!";
                     }
                     catch (Exception ex)
                     {
-                        Globals.Message = $"Ошибка при отключении телеметрии: {ex.Message}";
+                        Message = $"Ошибка при отключении телеметрии: {ex.Message}";
                     }
                 }
                 else
@@ -435,11 +462,11 @@ namespace StemSchool
 
                         Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Speech").SetValue("AllowSpeechModelUpdate", 1);
 
-                        Globals.Message = "Телеметрия включена!";
+                        Message = "Телеметрия включена!";
                     }
                     catch (Exception ex)
                                         {
-                        Globals.Message = $"Ошибка при включении телеметрии: {ex.Message}";
+                         Message = $"Ошибка при включении телеметрии: {ex.Message}";
                     }
 
                 }
@@ -494,7 +521,7 @@ namespace StemSchool
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Ошибка при установке обоев: {ex.Message}");
+                        Message = ex.Message;
                     }
                 }
 
