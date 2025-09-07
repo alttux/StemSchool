@@ -1,8 +1,10 @@
-﻿using Microsoft.Win32;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Media;
 
 namespace StemSchool
 {
@@ -34,7 +36,20 @@ namespace StemSchool
         {
             InitializeComponent();
             WallTextBox.Text = wallPath;
+            ThemeManagment.SetPrimaryColor(ThemeManagment.GetSystemThemeColor());
+
+            SystemEvents.UserPreferenceChanged += (s, e) =>
+            {
+                if (e.Category == UserPreferenceCategory.General)
+                {
+                    ThemeManagment.SetPrimaryColor(ThemeManagment.GetSystemThemeColor());
+                    ThemeManagment.SetTheme(ThemeManagment.ShouldSystemUseDarkMode());
+                }
+                    
+
+            };
         }
+
 
         private void SetProxyClick(object sender, RoutedEventArgs e)
         {
@@ -217,11 +232,6 @@ namespace StemSchool
         {
             // применяем обои без перезагрузки
             Tweaks.WallpaperSetter.SetWallpaper(WallTextBox.Text);
-        }
-
-        public static class Globals
-        {
-            public static string Message = "Неизвестное сообщение";
         }
 
         /// <summary>
@@ -532,6 +542,62 @@ namespace StemSchool
                 private const int SPI_SETDESKWALLPAPER = 0x0014;
                 private const int SPIF_UPDATEINIFILE = 0x01;
                 private const int SPIF_SENDWININICHANGE = 0x02;
+            }
+        }
+
+        public class ThemeManagment
+        {
+            [DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#138")]
+            public static extern bool ShouldSystemUseDarkMode();
+
+            [DllImport("uxtheme.dll", EntryPoint = "#95")]
+            public static extern uint GetImmersiveColorFromColorSetEx(uint dwImmersiveColorSet, uint dwImmersiveColorType, bool bIgnoreHighContrast, uint dwHighContrastCacheMode);
+            
+            [DllImport("uxtheme.dll", EntryPoint = "#96")]
+            public static extern uint GetImmersiveColorTypeFromName(IntPtr pName);
+            
+            [DllImport("uxtheme.dll", EntryPoint = "#98")]
+            public static extern int GetImmersiveUserColorSetPreference(bool bForceCheckRegistry, bool bSkipCheckOnFail);
+
+            public static Color GetSystemThemeColor()
+            {
+                var colorSetEx = GetImmersiveColorFromColorSetEx(
+                    (uint)GetImmersiveUserColorSetPreference(false, false),
+                    GetImmersiveColorTypeFromName(Marshal.StringToHGlobalUni("ImmersiveStartSelectionBackground")),
+                    false, 0);
+
+                var colour = Color.FromArgb((byte)((0xFF000000 & colorSetEx) >> 24), (byte)(0x000000FF & colorSetEx),
+                    (byte)((0x0000FF00 & colorSetEx) >> 8), (byte)((0x00FF0000 & colorSetEx) >> 16));
+
+                return colour;
+            }
+            public static void SetPrimaryColor(Color color)
+            {
+                //This is the API in 4.2.1
+                PaletteHelper paletteHelper = new PaletteHelper();
+
+                //Get current theme
+                var theme = paletteHelper.GetTheme();
+
+                //Apply primary color
+                theme.SetPrimaryColor(color);
+
+                //Apply theme to application
+                paletteHelper.SetTheme(theme);
+            }
+            public static void SetTheme(bool bTheme)
+            {
+                PaletteHelper paletteHelper = new PaletteHelper();
+                var theme = paletteHelper.GetTheme();
+                if (bTheme)
+                {
+                    theme.SetDarkTheme();
+                }
+                else
+                {
+                    theme.SetLightTheme();
+                }
+                paletteHelper.SetTheme(theme);
             }
         }
     }

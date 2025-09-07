@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:StemSchool"
         mc:Ignorable="d"
         Title="StemSchool Tweaker" Height="450" Width="650" 
-        ResizeMode="CanResize" MinHeight="370" MinWidth="550"
+        ResizeMode="CanResize" MinHeight="370" MinWidth="650"
         Icon="/image_2025-03-18_07-00-51.png" 
         Style="{StaticResource MaterialDesignWindow}"
         Background="{DynamicResource MaterialDesign.Brush.Background}"

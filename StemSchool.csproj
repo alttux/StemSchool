@@ -13,6 +13,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Configurations>Debug;Release;Appx</Configurations>
     <Platforms>AnyCPU</Platforms>
+    <Title>StemSchool</Title>
+    <Description>https://github.com/alttux</Description>
+    <PackageProjectUrl>https://github.com/alttux</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/alttux/StemSchool</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +33,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -35,14 +44,12 @@
   </ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="cert_install_v2.msi"
-			   CopyToOutputDirectory="Always">
+	  <Content Include="cert_install_v2.msi" CopyToOutputDirectory="Always">
 	  </Content>
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="wall.png"
-				 CopyToOutputDirectory="Always">
+		<Content Include="wall.png" CopyToOutputDirectory="Always">
 		</Content>
 	</ItemGroup>
 			   
